@@ -7,17 +7,32 @@
  */
 
 import React from 'react';
-import { StyleSheet } from 'react-native'
+import { Image } from 'react-native';
+import { StyleSheet, View } from 'react-native'
 import { Title } from 'react-native-paper'
 
 const SplashScreen = () => {
     return (
-        <Title> Hello world</Title>
+        <View style={styles.container}>
+            <Image style={styles.logo} source={require('../../assets/img/logo.png')} />
+            <Title style={styles.title}>PhotoLens</Title>
+        </View>
     );
 };
 
-const style = StyleSheet.create({
-
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        backgroundColor: "#428E7C",
+    },
+    logo: {
+        alignSelf: 'center',
+    },
+    title: {
+        alignSelf: 'center',
+        color: "#FFF"
+    },
 })
 
 export default SplashScreen;

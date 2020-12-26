@@ -8,11 +8,12 @@
 
 import React from 'react';
 
-import {Text} from 'react-native'
+import { Text } from 'react-native'
+import SplashScreen from './src/screens/splash_screen/SplashScreen';
 
 const App = () => {
   return (
-    <Text> Hello world</Text>
+    <SplashScreen />
   );
 };
 
