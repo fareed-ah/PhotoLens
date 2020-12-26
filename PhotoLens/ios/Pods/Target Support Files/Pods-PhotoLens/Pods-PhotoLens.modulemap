@@ -1,0 +1,6 @@
+module Pods_PhotoLens {
+  umbrella header "Pods-PhotoLens-umbrella.h"
+
+  export *
+  module * { export * }
+}
