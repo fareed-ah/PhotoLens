@@ -7,14 +7,11 @@
  */
 
 import React from 'react';
-
-import { Text } from 'react-native'
-import LoginScreen from './src/screens/login/LoginScreen';
-import SplashScreen from './src/screens/splash_screen/SplashScreen';
+import Providers from './src/utils/Providers';
 
 const App = () => {
   return (
-    <LoginScreen />
+    <Providers />
   );
 };
 
