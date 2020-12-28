@@ -9,11 +9,12 @@
 import React from 'react';
 
 import { Text } from 'react-native'
+import LoginScreen from './src/screens/login/LoginScreen';
 import SplashScreen from './src/screens/splash_screen/SplashScreen';
 
 const App = () => {
   return (
-    <SplashScreen />
+    <LoginScreen />
   );
 };
 
