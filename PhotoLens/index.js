@@ -3,7 +3,6 @@
  */
 
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
 import * as React from 'react';
 import {AppRegistry} from 'react-native';
 import App from './App';
@@ -22,11 +21,9 @@ const theme = {
 
 export default function Main() {
     return (
-      <NavigationContainer>
         <PaperProvider theme={theme}>
             <App />
         </PaperProvider>
-      </NavigationContainer>
   );
 }
 

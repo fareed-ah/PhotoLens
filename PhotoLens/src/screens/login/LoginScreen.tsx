@@ -1,13 +1,16 @@
 
-import React from 'react';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useContext } from 'react';
 import { Text } from 'react-native';
 import { StyleSheet, View } from 'react-native'
 import { Button, TextInput, Title } from 'react-native-paper'
+import { AuthNavProps, AuthParamList } from '../../navigation/AuthParamList';
+import { AuthContext } from '../../navigation/AuthProvider';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation, route }: AuthNavProps<"SignIn">) => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-
+    const { login } = useContext(AuthContext);
 
     return (
         <View style={styles.container}>
@@ -31,8 +34,8 @@ const LoginScreen = () => {
             />
             <Text style={styles.forgotPassword} onPress={() => { }}>Forgot your password?</Text>
 
-            <Button style={styles.signInButton} mode="contained" onPress={() => { }}>Sign In</Button>
-            <Text style={styles.signUp} onPress={() => { }}>Don't have an account? Sign up!</Text>
+            <Button style={styles.signInButton} mode="contained" onPress={() => login()}>Sign In</Button>
+            <Text style={styles.signUp} onPress={() => { navigation.navigate("SignUp") }}>Don't have an account? Sign up!</Text>
 
         </View>
     );
