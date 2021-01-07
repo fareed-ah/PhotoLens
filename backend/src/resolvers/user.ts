@@ -36,13 +36,26 @@ export class UserResolver {
         return em.findOne(User, {id})
     }
 
+    @Query(() => User, {nullable: true})
+    async me(
+        @Ctx() { req, em }: MyContext
+    ) {
+        if (!req.session.userId) {
+            return null; // not logged in
+        }
+
+        const user = await em.findOne(User, { id: req.session.userId });
+        return user;
+    }
+
+
     @Mutation(() => UserResponse)
     async registerUser(
         @Arg('first_name', () => String) firstName: string,
         @Arg('last_name', () => String) lastName: string,
         @Arg('email', () => String) email: string,
         @Arg('password', () => String) password: string,
-        @Ctx() { em }: MyContext)
+        @Ctx() { em, req }: MyContext)
         : Promise<UserResponse> {
         if (password.length < 8) {
             return {
@@ -68,11 +81,13 @@ export class UserResolver {
                         field: "username",
                         message:  "Username already taken",
                     }
-                ]
+                ]}
             }
-            }
-            console.log("Register error: ", err.message)
         }
+
+        // Store user id session this will log in the user
+        req.session.userId = user.id
+
         return {user};
     }
 
@@ -80,7 +95,7 @@ export class UserResolver {
     async loginUser(
         @Arg('email', () => String) email: string,
         @Arg('password', () => String) password: string,
-        @Ctx() { em }: MyContext)
+        @Ctx() { em, req}: MyContext)
         : Promise<UserResponse> {
         const user = await em.findOne(User, { email });
         if (!user) {
@@ -101,6 +116,8 @@ export class UserResolver {
                 }]
             }
         }
+
+        req.session.userId = user.id
 
         return {
             user,

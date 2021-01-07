@@ -61,7 +61,16 @@ let UserResolver = class UserResolver {
     user(id, { em }) {
         return em.findOne(User_1.User, { id });
     }
-    registerUser(firstName, lastName, email, password, { em }) {
+    me({ req, em }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!req.session.userId) {
+                return null;
+            }
+            const user = yield em.findOne(User_1.User, { id: req.session.userId });
+            return user;
+        });
+    }
+    registerUser(firstName, lastName, email, password, { em, req }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (password.length < 8) {
                 return {
@@ -89,12 +98,12 @@ let UserResolver = class UserResolver {
                         ]
                     };
                 }
-                console.log("Register error: ", err.message);
             }
+            req.session.userId = user.id;
             return { user };
         });
     }
-    loginUser(email, password, { em }) {
+    loginUser(email, password, { em, req }) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield em.findOne(User_1.User, { email });
             if (!user) {
@@ -114,6 +123,7 @@ let UserResolver = class UserResolver {
                         }]
                 };
             }
+            req.session.userId = user.id;
             return {
                 user,
             };
@@ -154,6 +164,13 @@ __decorate([
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "user", null);
+__decorate([
+    type_graphql_1.Query(() => User_1.User, { nullable: true }),
+    __param(0, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UserResolver.prototype, "me", null);
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
     __param(0, type_graphql_1.Arg('first_name', () => String)),
