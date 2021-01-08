@@ -4,36 +4,15 @@ import { Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, TextInput, Title } from 'react-native-paper'
 import { AuthNavProps } from '../../navigation/AuthParamList';
-import { useMutation } from "urql";
-
-const REGISTER_MUT = `
-mutation Register($firstname: String!, $lastname: String!,$email: String!, $password: String!
-){
-    registerUser(
-        password: $password,
-        email: $email,
-        first_name: $firstname,
-        last_name: $lastname){
-        errors{
-            field
-            message
-        }
-        user{
-            id
-            firstName
-            lastName
-            email
-        }
-    }
-}
-`
+import { useRegisterMutation } from '../../generated/graphql';
+import { toErrorMap } from '../../utils/toErrorMap';
 
 const RegisterScreen = ({ navigation }: AuthNavProps<'SignUp'>) => {
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const [registerResponse, register] = useMutation(REGISTER_MUT);
+    const [registerResponse, register] = useRegisterMutation();
 
     return (
 
@@ -79,17 +58,20 @@ const RegisterScreen = ({ navigation }: AuthNavProps<'SignUp'>) => {
                 style={styles.signUpButton}
                 mode="contained"
                 onPress={
-                    () => {
+                    async () => {
                         console.log("Register")
-                        return register(
+                        const response = await register(
                             {
                                 firstname: firstName,
                                 lastname: lastName,
                                 email: email,
                                 password: password
-                            }).then(result => {
-                                console.log(result.data.registerUser.errors)
                             })
+                        if (response.data?.registerUser.errors) {
+                            console.log(toErrorMap(response.data.registerUser.errors));
+                        } else if (response.data?.registerUser.user) {
+                            // Registered successfully -> login and go to home page
+                        }
                     }
                 }>Sign Up</Button>
 
