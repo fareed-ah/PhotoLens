@@ -1,17 +1,24 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react'
-import { useState } from 'react';
 import AuthProvider from '../navigation/AuthProvider';
 import Routes from '../navigation/Routes';
+import { createClient, Provider, defaultExchanges } from 'urql';
+import { devtoolsExchange } from '@urql/devtools';
 
-interface ProvidersProps {
-}
+const client = createClient({
+    url: 'http://192.168.2.14:3000/graphql',
+    exchanges: [devtoolsExchange, ...defaultExchanges],
+    fetchOptions: {
+        credentials: "include",
+    }
+});
 
-const Providers = (props: ProvidersProps) => {
+const Providers = () => {
     return (
-        <AuthProvider>
-            <Routes />
-        </AuthProvider>
+        <Provider value={client}>
+            <AuthProvider>
+                <Routes />
+            </AuthProvider>
+        </Provider>
     );
 }
 

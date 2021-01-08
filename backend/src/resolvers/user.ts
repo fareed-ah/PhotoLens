@@ -57,6 +57,7 @@ export class UserResolver {
         @Arg('password', () => String) password: string,
         @Ctx() { em, req }: MyContext)
         : Promise<UserResponse> {
+        console.log("Register")
         if (password.length < 8) {
             return {
                 errors: [

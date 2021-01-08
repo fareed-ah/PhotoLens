@@ -53,7 +53,10 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         }),
         context: ({ req, res }) => ({ em: orm.em, req, res })
     });
-    apolloServer.applyMiddleware({ app });
+    apolloServer.applyMiddleware({
+        app,
+        cors: { origin: "http://localhost:3000" }
+    });
     app.listen(3000, () => {
         console.log('Server started on  localhost:3000');
         console.log('Prod? : ', constants_1.__prod__);

@@ -72,6 +72,7 @@ let UserResolver = class UserResolver {
     }
     registerUser(firstName, lastName, email, password, { em, req }) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log("Register");
             if (password.length < 8) {
                 return {
                     errors: [
