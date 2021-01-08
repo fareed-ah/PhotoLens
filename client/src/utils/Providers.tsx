@@ -1,10 +1,15 @@
 import React from 'react'
 import AuthProvider from '../navigation/AuthProvider';
 import Routes from '../navigation/Routes';
-import { createClient, Provider } from 'urql';
+import { createClient, Provider, defaultExchanges } from 'urql';
+import { devtoolsExchange } from '@urql/devtools';
 
 const client = createClient({
-    url: 'http://localhost:3000/graphql',
+    url: 'http://192.168.2.14:3000/graphql',
+    exchanges: [devtoolsExchange, ...defaultExchanges],
+    fetchOptions: {
+        credentials: "include",
+    }
 });
 
 const Providers = () => {

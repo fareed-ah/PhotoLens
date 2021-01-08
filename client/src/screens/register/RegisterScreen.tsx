@@ -1,18 +1,42 @@
 
-import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Image } from 'react-native';
-import { StyleSheet, View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, TextInput, Title } from 'react-native-paper'
-import { AuthNavProps, AuthParamList } from '../../navigation/AuthParamList';
+import { AuthNavProps } from '../../navigation/AuthParamList';
+import { useMutation } from "urql";
 
-const RegisterScreen = ({ navigation, route }: AuthNavProps<'SignUp'>) => {
-    const [name, setName] = React.useState('');
+const REGISTER_MUT = `
+mutation Register($firstname: String!, $lastname: String!,$email: String!, $password: String!
+){
+    registerUser(
+        password: $password,
+        email: $email,
+        first_name: $firstname,
+        last_name: $lastname){
+        errors{
+            field
+            message
+        }
+        user{
+            id
+            firstName
+            lastName
+            email
+        }
+    }
+}
+`
+
+const RegisterScreen = ({ navigation }: AuthNavProps<'SignUp'>) => {
+    const [firstName, setFirstName] = React.useState('');
+    const [lastName, setLastName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [registerResponse, register] = useMutation(REGISTER_MUT);
 
     return (
+
         <View style={styles.container}>
             <TouchableOpacity onPress={() => { navigation.navigate("SignIn") }}>
                 <Image style={styles.backButton}
@@ -22,9 +46,16 @@ const RegisterScreen = ({ navigation, route }: AuthNavProps<'SignUp'>) => {
             <TextInput
                 style={styles.nameInput}
                 mode="flat"
-                label="Name"
-                value={name}
-                onChangeText={name => setName(name)}
+                label="First Name"
+                value={firstName}
+                onChangeText={name => setFirstName(name)}
+            />
+            <TextInput
+                style={styles.nameInput}
+                mode="flat"
+                label="Last Name"
+                value={lastName}
+                onChangeText={name => setLastName(name)}
             />
             <TextInput
                 style={styles.emailInput}
@@ -44,7 +75,23 @@ const RegisterScreen = ({ navigation, route }: AuthNavProps<'SignUp'>) => {
                 onChangeText={password => setPassword(password)}
             />
 
-            <Button style={styles.signUpButton} mode="contained" onPress={() => { }}>Sign Up</Button>
+            <Button
+                style={styles.signUpButton}
+                mode="contained"
+                onPress={
+                    () => {
+                        console.log("Register")
+                        return register(
+                            {
+                                firstname: firstName,
+                                lastname: lastName,
+                                email: email,
+                                password: password
+                            }).then(result => {
+                                console.log(result.data.registerUser.errors)
+                            })
+                    }
+                }>Sign Up</Button>
 
         </View>
     );
