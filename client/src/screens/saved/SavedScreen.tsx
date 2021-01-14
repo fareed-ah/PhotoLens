@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { Text } from 'react-native';
 import { StyleSheet, View } from 'react-native'
-import { Button, TextInput, Title } from 'react-native-paper'
+import { Title } from 'react-native-paper'
 
 const SavedScreen = () => {
 

@@ -1,12 +1,15 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react'
 import { useState } from 'react';
+import { User } from '../generated/graphql';
 
-type User = null | { username: string }
+export type CurrentUser = ({
+    __typename?: "User" | undefined;
+} & Pick<User, "email" | "id" | "firstName" | "lastName">) | null | undefined
 
 export const AuthContext = React.createContext<{
-    user: User,
-    login: () => void,
+    user: CurrentUser,
+    login: (loginUser: CurrentUser) => void,
     logout: () => void,
     signUp: () => void,
 }>({
@@ -20,14 +23,13 @@ interface AuthProviderProps {
 }
 
 const AuthProvider = (props: AuthProviderProps) => {
-    const [user, setUser] = useState<User>(null);
+    const [user, setUser] = useState<CurrentUser>(null);
     return (<AuthContext.Provider value={{
         user,
-        login: () => {
-            const fakeUser = { username: "bob" };
-            setUser(fakeUser);
+        login: (loginUser) => {
+            setUser(loginUser);
             try {
-                AsyncStorage.setItem('user', JSON.stringify(fakeUser))
+                AsyncStorage.setItem('user', JSON.stringify(loginUser))
             } catch (e) {
                 // saving error
             }

@@ -6,7 +6,6 @@ import { AuthContext } from "./AuthProvider";
 import AuthStack from "./AuthStack";
 import BottomNavBar from "./BottomNavTabs";
 
-
 const Routes = () => {
     const { user, login } = useContext(AuthContext)
     const [loading, setLoading] = useState(true)

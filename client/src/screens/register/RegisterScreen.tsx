@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { Image, StyleSheet, View, } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button, TextInput, Title } from 'react-native-paper'
@@ -7,9 +7,11 @@ import { AuthNavProps } from '../../navigation/AuthParamList';
 import { useRegisterMutation } from '../../generated/graphql';
 import { toErrorMap } from '../../utils/toErrorMap';
 import { Formik } from 'formik';
+import { AuthContext } from '../../navigation/AuthProvider';
 
 const RegisterScreen = ({ navigation }: AuthNavProps<'SignUp'>) => {
     const [, register] = useRegisterMutation();
+    const { login } = useContext(AuthContext);
 
     return (
         <Formik
@@ -27,6 +29,7 @@ const RegisterScreen = ({ navigation }: AuthNavProps<'SignUp'>) => {
                     console.log(response.data.registerUser.errors)
                     setErrors(toErrorMap(response.data.registerUser.errors));
                 } else if (response.data?.registerUser.user) {
+                    login(response.data?.registerUser.user)
                     // Registered successfully -> login and go to home page
                 }
             }}
